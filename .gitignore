@@ -1,0 +1,6 @@
+.idea
+uploads/*
+npm-debug.log
+public/uploads/*
+config/config.json
+node_modules
