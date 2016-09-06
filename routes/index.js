@@ -90,7 +90,7 @@ router.get('/hosts/:id', function(req, res) {
     if (model) {
       res.send(model.jsonapiSerialize());
     } else {
-      res.end(404);
+      res.send(404);
     }
   });
 });
