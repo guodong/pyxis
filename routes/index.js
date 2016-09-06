@@ -87,7 +87,11 @@ router.get('/hosts/:id', function(req, res) {
   models.host.findById(req.params.id, {
     include: [models.cluster, models.deployment]
   }).then(function(model) {
-    res.send(model.jsonapiSerialize());
+    if (model) {
+      res.send(model.jsonapiSerialize());
+    } else {
+      res.end(404);
+    }
   });
 });
 router.post('/hosts', function(req, res) {
