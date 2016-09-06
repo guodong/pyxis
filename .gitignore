@@ -1,6 +1,9 @@
 .idea
 uploads/*
 npm-debug.log
-public/uploads/*
+public/uploads/*.png
+public/uploads/*.jpg
+public/uploads/*.zip
 config/config.json
 node_modules
+.DS_Store

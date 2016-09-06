@@ -12,6 +12,12 @@ var request = require('request');
 var socketio = require('../socketio');
 
 /**
+ * static files
+ */
+router.get('/install.ps1', function(req, res) {
+  res.sendFile('../public/install.ps1')
+});
+/**
  * regions
  */
 router.get('/regions', function(req, res, next) {
@@ -225,8 +231,13 @@ var storage = multer.diskStorage({
     cb(null, uuid.v4() + '.jpg') //Appending .jpg
   }
 });
-var upload = multer({storage: storage});
-router.post('/upload', upload.single('file'), function(req, res) {
-  res.send(req.file.filename);
+var upload = multer({storage: storage}).single('file');
+router.post('/upload', function(req, res) {
+  upload(req, res, function(err) {
+    if (err) {
+      return res.end('error uploading');
+    }
+    res.send(req.file.filename);
+  });
 });
 module.exports = router;

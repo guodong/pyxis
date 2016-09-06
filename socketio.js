@@ -46,7 +46,7 @@ function create(server) {
       host.id = msg.id;
       host.status = 'online';
       /* check whether host already created before */
-      request.get('http://localhost:3000/hosts/' + msg.id).on('response', function(response) {
+      request.get('http://apiv2.cloudwarehub.com/hosts/' + msg.id).on('response', function(response) {
         if (response.statusCode === 404) {
           /* 调用pyxis api, 创建新host */
           models.host.create(msg).then(function(model) {

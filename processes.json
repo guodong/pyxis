@@ -1,8 +1,8 @@
 {
   "apps" : [{
-    "name"        : "someExpress4App",
+    "name"        : "pyxis",
     "script"      : "bin/www",
-    "watch"       : "../",
+    "watch"       : ["routes"],
     "log_date_format"  : "YYYY-MM-DD HH:mm Z",
   }]
 }
