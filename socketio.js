@@ -31,6 +31,7 @@ function create(server) {
   nsp.on('connection', function(socket) {
     hosts.push({id: null, socket: socket, status: 'waiting'});
     console.log('new connection');
+    
     socket.on('disconnect', function() {
       console.log('close connection');
       for (var i in hosts) {
@@ -53,13 +54,11 @@ function create(server) {
             model.save();
             model.setDataValue('token', msg.token);
             nsp_ara.to('ara').emit('new_host', model.jsonapiSerialize());
-          })
-
+          });
         }
       });
     });
-
-
+    
     socket.on('runsuccess', function(msg) {
       for (var i in sessions) {
         if (sessions[i].token == msg.token) {

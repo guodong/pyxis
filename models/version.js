@@ -11,6 +11,7 @@ module.exports = function(sequelize, DataTypes) {
         model.belongsTo(models.cloudware, {
           onDelete: "CASCADE",
         });
+        model.hasMany(models.deployment)
       },
       jsonapiDeserialize: function(data, cb) {
         var JSONAPIDeserializer = require('jsonapi-serializer').Deserializer;

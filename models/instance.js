@@ -7,6 +7,7 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         model.belongsTo(models.deployment);
+        model.belongsTo(models.version);
       },
       jsonapiDeserialize: function(data, cb) {
         var JSONAPIDeserializer = require('jsonapi-serializer').Deserializer;
@@ -15,6 +16,13 @@ module.exports = function(sequelize, DataTypes) {
             valueForRelationship: function(relationship) {
               return {
                 id: relationship.id,
+              }
+            }
+          },
+          versions: {
+            valueForRelationship: function(relationship) {
+              return {
+                id: relationship.id
               }
             }
           }

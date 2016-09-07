@@ -11,12 +11,7 @@ var shortid = require('shortid');
 var request = require('request');
 var socketio = require('../socketio');
 
-/**
- * static files
- */
-router.get('/install.ps1', function(req, res) {
-  res.sendFile('../public/install.ps1')
-});
+
 /**
  * regions
  */
@@ -200,11 +195,12 @@ router.post('/deployments', function(req, res) {
  */
 var sessions = [];
 router.post('/instances', function(req, res) {
-  var deployment;
   models.instance.jsonapiDeserialize(req.body, function(err, data) {
-    models.deployment.findById(data.deployment.id, {
-      include: [models.host]
-    }).then(function(deployment) {
+    models.version.findById(data.version.id, {
+      include: [models.deployment]
+    }).then(function(version) {
+      var deployments = version.deployments;
+      var deployment = deployments[0];
       deployment.getHost().then(function(host) {
         var sock_host = socketio.findHost(host.get('id'));
         if (sock_host) {
@@ -219,6 +215,8 @@ router.post('/instances', function(req, res) {
               res.send(port + '');
             });
           })
+        } else {
+          res.send(500);
         }
       });
     })
