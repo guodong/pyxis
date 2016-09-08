@@ -140,6 +140,13 @@ router.post('/cloudwares/upload', upload.single('file'), function(req, res) {
 /**
  * versions
  */
+router.get('/versions', function(req, res) {
+  models.version.findAll({
+    include: [models.cloudware]
+  }).then(function(versions) {
+    res.send(serializers.version.serialize(versions));
+  });
+});
 router.get('/versions/:id', function(req, res) {
   models.version.findById(req.params.id, {
     include: [models.cloudware]
