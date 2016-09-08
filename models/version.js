@@ -4,7 +4,8 @@ module.exports = function(sequelize, DataTypes) {
   var model = sequelize.define("version", {
     name: DataTypes.STRING,
     comment: DataTypes.STRING,
-    image: DataTypes.STRING
+    image: DataTypes.STRING,
+    cmd: DataTypes.STRING
   }, {
     classMethods: {
       associate: function(models) {

@@ -211,7 +211,7 @@ router.post('/instances', function(req, res) {
       deployment.getHost().then(function(host) {
         var sock_host = socketio.findHost(host.get('id'));
         if (sock_host) {
-          socketio.runCloudware(sock_host, 'notepad', function(port) {
+          socketio.runCloudware(sock_host, version.get('cmd'), function(port) {
             var instance;
             models.instance.create({port: port}).then(function(inst) {
               instance = inst;
