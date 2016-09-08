@@ -67,6 +67,11 @@ function create(server) {
               model.setDataValue('token', msg.token);
               nsp_ara.to('ara').emit('new_host', model.jsonapiSerialize());
             });
+          } else {
+            models.host.findById(msg.id).then(function(model) {
+              model.setDataValue('token', msg.token);
+              nsp_ara.to('ara').emit('new_host', model.jsonapiSerialize());
+            });
           }
         });
       }
