@@ -22,6 +22,15 @@ function findHostBySocket(socket) {
   return null;
 }
 
+function findHostById(id) {
+  for (var i in hosts) {
+    if (hosts[i].id === id) {
+      return hosts[i];
+    }
+  }
+  return null;
+}
+
 function create(server) {
   var io = require('socket.io')(server);
   var request = require('request');
@@ -29,7 +38,6 @@ function create(server) {
   var nsp = io.of('/host');
   var nsp_ara = io.of('/ara');
   nsp.on('connection', function(socket) {
-    hosts.push({id: null, socket: socket, status: 'waiting'});
     console.log('new connection');
     
     socket.on('disconnect', function() {
@@ -43,20 +51,26 @@ function create(server) {
     });
 
     socket.on('host_info', function(msg) {
-      var host = findHostBySocket(socket);
-      host.id = msg.id;
-      host.status = 'online';
-      /* check whether host already created before */
-      request.get('http://apiv2.cloudwarehub.com/hosts/' + msg.id).on('response', function(response) {
-        if (response.statusCode === 404) {
-          /* 调用pyxis api, 创建新host */
-          models.host.create(msg).then(function(model) {
-            model.save();
-            model.setDataValue('token', msg.token);
-            nsp_ara.to('ara').emit('new_host', model.jsonapiSerialize());
-          });
-        }
-      });
+      var host = findHostById(msg.id);
+      if (!host) {
+        host = {
+          id: msg.id,
+          socket: socket
+        };
+        hosts.push(host);
+        /* check whether host already created before */
+        request.get('http://apiv2.cloudwarehub.com/hosts/' + msg.id).on('response', function(response) {
+          if (response.statusCode === 404) {
+            /* 调用pyxis api, 创建新host */
+            models.host.create(msg).then(function(model) {
+              model.save();
+              model.setDataValue('token', msg.token);
+              nsp_ara.to('ara').emit('new_host', model.jsonapiSerialize());
+            });
+          }
+        });
+      }
+      
     });
     
     socket.on('runsuccess', function(msg) {
